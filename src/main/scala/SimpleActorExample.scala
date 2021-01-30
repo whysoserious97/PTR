@@ -1,10 +1,23 @@
-import akka.actor.{ActorSystem, Props}
+import akka.actor.Actor
+import akka.stream.scaladsl.Source
 
-object SimpleActorExample {
-  def main(args: Array[String]) {
-    var actorSystem = ActorSystem("ActorSystem"); // Creating ActorSystem
-    var actor = actorSystem.actorOf(Props[HelloAkka], "HelloAkka") //Creating actor
-    actor ! "Hello Akka" // Sending messages by using !
-    actor ! 100.52
+class Translator extends Actor {
+  def receive = {
+    case word: String =>
+      // ... process message
+      val reply = word.toUpperCase
+      sender() ! reply // reply to the ask
   }
 }
+
+object HttpClientSingleRequest {
+  def main(args: Array[String]): Unit = {
+//    var html = Await.result(get("http://localhost:4000/tweets/1"), 10.seconds)
+//    println(html)
+
+//    def func(x:Int) : Future[Int] = ???
+    val src = Source("localhost:4000")
+    println(src)
+  }
+}
+
