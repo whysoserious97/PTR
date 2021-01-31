@@ -1,3 +1,4 @@
 [debug] not up to date. inChanged = true, force = false
 [debug] Updating ProjectRef(uri("file:/C:/Users/wildw/IdeaProjects/PTR/Akka-SBT%20TRY/"), "akka-sbt-try")...
 [debug] Done updating ProjectRef(uri("file:/C:/Users/wildw/IdeaProjects/PTR/Akka-SBT%20TRY/"), "akka-sbt-try")
+[warn] There may be incompatibilities among your library dependencies; run 'evicted' to see detailed eviction warnings.

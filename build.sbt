@@ -14,6 +14,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor-testkit-typed" % akkaVersion % Test,
   "org.scalatest" %% "scalatest" % "3.1.0" % Test,
 
+  "com.lightbend.akka" %% "akka-stream-alpakka-sse" % "2.0.2",
 "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion,
 "com.typesafe.akka" %% "akka-stream" % akkaVersion,
 "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion,
