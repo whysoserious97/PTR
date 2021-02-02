@@ -1,40 +1,41 @@
+
+import SSE.actorSystem.dispatcher
 import akka.NotUsed
-import akka.actor.{Actor, ActorSystem, Props}
+import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.client.RequestBuilding.Get
 import akka.http.scaladsl.model.sse.ServerSentEvent
-import akka.http.scaladsl.unmarshalling.Unmarshal
-import akka.stream.scaladsl.Source
-class HelloAkka extends Actor{    // Extending actor trait
+import akka.http.scaladsl.model.{HttpRequest, HttpResponse, Uri}
+import akka.stream.alpakka.sse.scaladsl.EventSource
+import akka.stream.scaladsl.{Sink, Source}
+import akka.stream.{ActorMaterializer, ThrottleMode}
 
-  def receive = {
-//    implicit val mat: ActorMaterializer = ActorMaterializer()
-    //  Receiving message
-    case msg:String => {
-      println(msg)
-//      val my_map = msg.flatMap(Unmarshal(_).to[Source[ServerSentEvent, NotUsed]])
-    }
+import scala.concurrent.Future
+import scala.concurrent.duration.DurationInt
 
-    case _ =>println("Unknown message")      // Default case
-  }
-}
 
 object HttpClientSingleRequest {
 
   def main(args: Array[String]): Unit = {
 
-    implicit val system: ActorSystem = ActorSystem()
-//    implicit val mat: ActorMaterializer = ActorMaterializer()
-    var actor = system.actorOf(Props[HelloAkka],"HelloAkka")
+    implicit val system = ActorSystem()
+    implicit val mat    = ActorMaterializer()
 
-    import akka.http.scaladsl.unmarshalling.sse.EventStreamUnmarshalling._
-    import system.dispatcher
-
-    Http()
-      .singleRequest(Get("http://localhost:4000/tweets/1/"))
-      .flatMap(Unmarshal(_).to[Source[ServerSentEvent, NotUsed]])
-      .foreach(_.runForeach(se => actor ! se.data ))
-//    actor ! "{\"message\" : {\"field\": \"Hello\"}}"
+//    Http()
+//      .singleRequest(Get("http://localhost:4000/tweets/1/"))
+//      .flatMap(Unmarshal(_).to[Source[ServerSentEvent, NotUsed]])
+//      .foreach(_.runForeach(se => println(se)))
+val send: HttpRequest => Future[HttpResponse] = Http().singleRequest(_)
+   val eventSource: Source[ServerSentEvent, NotUsed] = EventSource(
+  uri = Uri(s"http://localhost:4000/tweets/1"),
+  send,
+  initialLastEventId = None,
+  retryDelay = 1.second
+)
+    while (true){
+      val events = eventSource.throttle(1, 500.milliseconds, 1, ThrottleMode.Shaping).take(1).runWith(Sink.seq)
+      events.foreach(se => println(se))
+      while (!events.isCompleted){}
+    }
   }
 
 }
