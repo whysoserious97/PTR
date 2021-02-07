@@ -31,11 +31,12 @@ val send: HttpRequest => Future[HttpResponse] = Http().singleRequest(_)
   initialLastEventId = None,
   retryDelay = 1.second
 )
-    while (true){
+    //while (true){
       val events = eventSource.throttle(1, 500.milliseconds, 1, ThrottleMode.Shaping).take(1).runWith(Sink.seq)
-      events.foreach(se => println(se))
-      while (!events.isCompleted){}
-    }
+
+      events.onComplete(se => println(se))
+    // }
+
   }
 
 }
