@@ -9,7 +9,8 @@ object MainApp {
 
     var DS = actorSystem.actorOf(Props[DynamicSpawner],"DS")
     var Con = actorSystem.actorOf(Props[Connector],"Con")
-
+    var router = actorSystem.actorOf(Props[Router],"Router")
+    
     Con ! "test"
   }
 }

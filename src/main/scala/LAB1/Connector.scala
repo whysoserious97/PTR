@@ -18,6 +18,8 @@ class Connector extends Actor {
   import context.dispatcher
   implicit  val system = context.system;
 
+  var router = system.actorSelection("user/Router")
+
   def receive = {
     case "test" => {
 
@@ -32,12 +34,12 @@ class Connector extends Actor {
       )
       while (true){
         val events = eventSource.throttle(1, 1.milliseconds, 1, ThrottleMode.Shaping).take(1).runWith(Sink.seq)
-        events.foreach(se => println(se.foreach(
+        events.foreach(se => se.foreach(
           ev => {
            val temp = ev.getData();
-            println(temp)
+            router ! temp
           })
-        )) /// .getData()
+        ) /// .getData()
         while (!events.isCompleted){}
       }
 
