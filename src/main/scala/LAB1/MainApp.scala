@@ -8,9 +8,9 @@ object MainApp {
   def main(args: Array[String]): Unit = {
 
     var DS = actorSystem.actorOf(Props[DynamicSpawner],"DS")
-    var Con = actorSystem.actorOf(Props[Connector],"Con")
-    var router = actorSystem.actorOf(Props[Router],"Router")
-    
+    var Con = actorSystem.actorOf(Props[Connector],"C")
+    var router = actorSystem.actorOf(Props[Router],"R")
+    var autoScaler = actorSystem.actorOf(Props[AutoScaler],"AS")
     Con ! "test"
   }
 }
