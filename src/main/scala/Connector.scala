@@ -1,32 +1,31 @@
 package LAB1
 
 import akka.NotUsed
-import akka.actor.Actor
+import akka.actor.{Actor, ActorSelection, ActorSystem}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.sse.ServerSentEvent
 import akka.http.scaladsl.model.{HttpRequest, HttpResponse, Uri}
+import akka.stream.ThrottleMode
 import akka.stream.alpakka.sse.scaladsl.EventSource
 import akka.stream.scaladsl.{Sink, Source}
-import akka.stream.{ActorMaterializer, ThrottleMode}
 
 import scala.concurrent.Future
 import scala.concurrent.duration.DurationInt
 
 class Connector extends Actor {
 
-  implicit val mat    = ActorMaterializer()
-  import context.dispatcher
-  implicit  val system = context.system;
+//  implicit val mat: ActorMaterializer = ActorMaterializer()
+  implicit  val system: ActorSystem = context.system;
+  implicit val dispatcher = context.dispatcher
 
-  var router = system.actorSelection("user/R")
-  var autoScaler = system.actorSelection("user/AS")
+  var router: ActorSelection = system.actorSelection("user/R")
+  var autoScaler: ActorSelection = system.actorSelection("user/AS")
 
-  def receive = {
+  def receive: Receive = {
     case "test" => {
 
       val send: HttpRequest => Future[HttpResponse] =
         Http().singleRequest(_)
-
       val eventSource: Source[ServerSentEvent, NotUsed] = EventSource(
         uri = Uri(s"http://localhost:4000/tweets/1"),
         send,
@@ -34,15 +33,16 @@ class Connector extends Actor {
         retryDelay = 1.second
       )
       while (true){
-        val events = eventSource.throttle(1, 1.milliseconds, 1, ThrottleMode.Shaping).take(20).runWith(Sink.seq)
-        events.foreach(se => se.foreach(
+        val future = eventSource.throttle(1, 1.milliseconds, 1, ThrottleMode.Shaping).take(20).runWith(Sink.seq)
+        future.foreach(se => se.foreach(
           ev => {
-           val temp = ev.getData();
-            router ! temp
-            autoScaler ! temp
+           val event = ev.getData();
+
+            router ! event
+            autoScaler ! event
           })
-        ) /// .getData()
-        while (!events.isCompleted){}
+        )
+        while (!future.isCompleted){}
       }
 
     }
