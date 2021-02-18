@@ -1,4 +1,3 @@
-package LAB1
 
 import akka.actor.SupervisorStrategy.Restart
 import akka.actor.{Actor, ActorSelection, OneForOneStrategy, Props}

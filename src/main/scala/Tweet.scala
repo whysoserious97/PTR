@@ -1,5 +1,3 @@
-package LAB1
-
 import akka.actor.ActorPath
 
 import scala.collection.mutable.ListBuffer
@@ -11,13 +9,16 @@ class Tweet (var content:String){
   var scoredWords :ListBuffer[String] = ListBuffer[String]()
   var result: Int  = 0
 
-  def toExecute(): Unit ={
-    if (!isExecuted){
-      isExecuted = true
-      return true
+  def toExecute(): Boolean ={
+    this.synchronized{
+      if (!isExecuted){
+        isExecuted = true
+        true
+      }
+      else {
+        false
+      }
     }
-    else {
-      return false
-    }
+
   }
 }

@@ -1,3 +1,5 @@
+import akka.actor.{ActorSystem, Props}
+
 object MainApp{
         val actorSystem:ActorSystem=ActorSystem("ActorSystem")
         def main(args:Array[String]):Unit={

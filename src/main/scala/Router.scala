@@ -1,4 +1,3 @@
-package LAB1
 
 import akka.actor.{Actor, ActorSelection, ActorSystem}
 import akka.event.{Logging, LoggingAdapter}

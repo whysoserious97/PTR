@@ -1,4 +1,3 @@
-package LAB1
 
 import akka.NotUsed
 import akka.actor.{Actor, ActorSelection, ActorSystem}

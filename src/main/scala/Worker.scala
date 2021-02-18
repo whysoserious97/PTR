@@ -1,5 +1,3 @@
-package LAB1
-
 import akka.actor.Actor
 import akka.event.{Logging, LoggingAdapter}
 
@@ -9,8 +7,7 @@ import scala.util.Random
 
 class Worker extends Actor{
 
-  val filename = "C:\\Users\\wildw\\IdeaProjects\\PTR\\Akka-SBT TRY\\src\\main\\scala\\LAB1\\em.txt"
-  val lines = Source.fromFile(filename).getLines.toList
+  val lines = Source.fromFile("src/main/scala/em.txt").getLines.toList
 
   val log: LoggingAdapter = Logging(context.system, this)
   var emotion: Map[String, Int] = Map[String, Int]()
@@ -35,10 +32,12 @@ class Worker extends Actor{
             tweet.result = tweet.result + emotion(chunk)
           }
         }
+        if(tweet.toExecute()){
+          log.info(s"Input"+tweet.input + s"${RESET}")
+          log.info(s"${GREEN_B}Scored Words"+tweet.scoredWords + s"${RESET}")
+          log.info(s"${WHITE_B}Result"+tweet.result + s"${RESET}")
+        }
 
-        log.info(s"${YELLOW}Input"+tweet.input + s"${RESET}")
-        log.info(s"${YELLOW}Scored Words"+tweet.scoredWords + s"${RESET}")
-        log.info(s"${YELLOW}Result"+tweet.result + s"${RESET}")
 
       }
       else {
