@@ -13,7 +13,7 @@ import scala.concurrent.duration.DurationInt
 
 class Connector extends Actor {
 
-//  implicit val mat: ActorMaterializer = ActorMaterializer()
+
   implicit  val system: ActorSystem = context.system;
   implicit val dispatcher = context.dispatcher
 
@@ -31,17 +31,30 @@ class Connector extends Actor {
         initialLastEventId = None,
         retryDelay = 1.second
       )
+      val eventSource2: Source[ServerSentEvent, NotUsed] = EventSource(
+        uri = Uri(s"http://localhost:4000/tweets/2"),
+        send,
+        initialLastEventId = None,
+        retryDelay = 1.second
+      )
       while (true){
         val future = eventSource.throttle(1, 1.milliseconds, 1, ThrottleMode.Shaping).take(20).runWith(Sink.seq)
+        val future2 = eventSource2.throttle(1, 1.milliseconds, 1, ThrottleMode.Shaping).take(20).runWith(Sink.seq)
         future.foreach(se => se.foreach(
           ev => {
            val event = ev.getData();
 
             router ! event
             autoScaler ! event
-          })
-        )
-        while (!future.isCompleted){}
+          }))
+        future2.foreach(se => se.foreach(
+          ev => {
+            val event = ev.getData();
+
+            router ! event
+            autoScaler ! event
+          }))
+        while (!future.isCompleted || !future2.isCompleted){}
       }
 
     }

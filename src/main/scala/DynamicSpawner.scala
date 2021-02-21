@@ -34,7 +34,6 @@ class DynamicSpawner extends Actor {
       sender() ! children
     }
     case integer: Integer => {
-//        println("Okkay "+ integer +"messages" )
         if (integer > 1.2 * workers.length ){
           val more = integer - workers.length
           for (a <- 1 to more){

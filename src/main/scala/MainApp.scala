@@ -11,8 +11,7 @@ object MainApp{
         var dataAnalyser =actorSystem.actorOf(Props[Analyzer],"Analyzer")
         Con!"test"
         dataAnalyser ! 10
-//    val hasher = new Hasher
-//    println(hasher.getHashes("Hello"))
+
 
         }
         }

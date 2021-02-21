@@ -43,11 +43,8 @@ class Worker extends Actor{
         }
         sender() ! "Success"
 
-
-
       }
       else {
-      //  sender() ! Success(200)
         log.info(s"${RED}Exception throwed" + s"${RESET}")
         sender ! "Success"
         throw new Exception("Panic!!!!!!!!!!!!")

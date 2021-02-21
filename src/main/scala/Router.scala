@@ -44,9 +44,7 @@ class Router extends Actor{
     }
     case tweet: Tweet => {
       val worker = system.actorSelection(paths(Random.nextInt(paths.length)))
-     // Thread.sleep(3000)
       if ( !tweet.isExecuted){
-       // tweet.addWorker(worker)
         val response =  worker ? tweet
         response.onComplete{
           case Success(_) =>{}

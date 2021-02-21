@@ -10,6 +10,7 @@ class Analyzer extends Actor{
 
   var hashtags = new ListBuffer[HashtagRecord]()
   var hashtagMap = collection.mutable.Map[String,Int]().withDefaultValue(0)
+
   override def receive = {
 
     case str:String => {
@@ -29,8 +30,8 @@ class Analyzer extends Actor{
                 hashtagMap.update(key , hashtagMap(key) + 1)
                 difference = Calendar.getInstance().getTime.getTime - currentHashTag.time
             }
-            val seq = hashtagMap.toSeq.sortWith(_._2 > _._2)
 
+            val seq = hashtagMap.toSeq.sortWith(_._2 > _._2)
 
             var elements = "Top Hashtags: "
             val number = Math.min(topX,seq.size)
@@ -43,6 +44,7 @@ class Analyzer extends Actor{
       Thread.sleep(2000)
       self ! topX
     }
+
     case _ => {}
   }
 }

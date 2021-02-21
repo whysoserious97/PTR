@@ -13,8 +13,6 @@ class Tweet (var content:String,var worker: ActorSelection){
     workers.appended(worker)
   }
 
-
-
   def toExecute(): Boolean ={
     this.synchronized{
       if (!isExecuted){
