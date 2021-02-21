@@ -8,7 +8,9 @@ object MainApp{
         val Con=actorSystem.actorOf(Props[Connector],"C")
         var router=actorSystem.actorOf(Props[Router],"R")
         var autoScaler=actorSystem.actorOf(Props[AutoScaler],"AS")
+        var dataAnalyser =actorSystem.actorOf(Props[Analyzer],"Analyzer")
         Con!"test"
+        dataAnalyser ! 10
 //    val hasher = new Hasher
 //    println(hasher.getHashes("Hello"))
 

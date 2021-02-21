@@ -1,5 +1,3 @@
-package LAB1
-
 
 import scala.util.hashing.MurmurHash3.{stringHash => h1}
 
