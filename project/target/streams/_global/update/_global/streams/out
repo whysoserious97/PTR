@@ -1,3 +1,3 @@
-[debug] not up to date. inChanged = false, force = false
+[debug] not up to date. inChanged = true, force = false
 [debug] Updating ProjectRef(uri("file:/C:/Users/wildw/IdeaProjects/PTR/Akka-SBT%20TRY/project/"), "akka-sbt-try-build")...
 [debug] Done updating ProjectRef(uri("file:/C:/Users/wildw/IdeaProjects/PTR/Akka-SBT%20TRY/project/"), "akka-sbt-try-build")
